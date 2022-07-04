@@ -1,5 +1,5 @@
 
-// See <https://man7.org/linux/man-pages/man4/console_codes.4.html>
+// See <https://man7.org/linux/man-pages/man4/console_codes.4.html> for more information
 
 package unixcsl
 
@@ -16,6 +16,10 @@ const (
 	ESC_CH = '\x1b'
 	DEL_CH = '\x7f'
 	CSI_CH = '\x9b'
+)
+
+var (
+	NEW_LINE_SEQ = []byte{CR_CH, LF_CH}
 )
 
 // BEGIN ESC sequences

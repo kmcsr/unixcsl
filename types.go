@@ -2,8 +2,8 @@
 package unixcsl
 
 import (
-	bytes "bytes"
-	strconv "strconv"
+	"bytes"
+	"strconv"
 )
 
 type TkType int
@@ -26,28 +26,20 @@ func (t TkType)String()(string){
 }
 
 type Token struct{
-	t TkType
-	v interface{}
-}
-
-func (tk *Token)T()(TkType){
-	return tk.t
-}
-
-func (tk *Token)V()(interface{}){
-	return tk.v
+	T TkType
+	V interface{}
 }
 
 func (tk *Token)Bytes()([]byte){
-	switch tk.t {
+	switch tk.T {
 	case TkBytes:
-		return tk.v.([]byte)
+		return tk.V.([]byte)
 	case TkCtl:
-		return []byte{tk.v.(byte)}
+		return []byte{tk.V.(byte)}
 	case TkESC:
-		return tk.v.(*ESCSeq).Bytes()
+		return tk.V.(*ESCSeq).Bytes()
 	case TkCSI:
-		return tk.v.(*CSISeq).Bytes()
+		return tk.V.(*CSISeq).Bytes()
 	}
 	return nil
 }
@@ -90,7 +82,13 @@ func (s *CSISeq)Bytes()([]byte){
 	return buf.Bytes()
 }
 
-type Pos struct{
-	X int
-	Y int
+func (s *CSISeq)ArgDef(i int, def int)(int){
+	if i >= len(s.Args) {
+		return def
+	}
+	return s.Args[i]
+}
+
+func (s *CSISeq)Arg(i int)(int){
+	return s.ArgDef(i, 0)
 }
